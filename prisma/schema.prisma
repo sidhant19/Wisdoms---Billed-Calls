@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model calls {
+  call_id      Int                     @id @default(autoincrement())
+  user_id      String?
+  expert_id    Int?
+  start_time   DateTime                @db.Timestamp(6)
+  end_time     DateTime                @db.Timestamp(6)
+  duration     String
+  expert_table expert_table?           @relation(fields: [expert_id], references: [expert_id], onDelete: NoAction, onUpdate: NoAction)
+  user_table   User?             @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model chats {
+  chat_id      Int           @id @default(autoincrement())
+  user_id      String?
+  expert_id    Int?
+  message      String
+  timestamp    DateTime      @db.Timestamp(6)
+  expert_table expert_table? @relation(fields: [expert_id], references: [expert_id], onDelete: NoAction, onUpdate: NoAction)
+  user_table   User?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model expert_table {
+  expert_id              Int            @id @default(autoincrement())
+  user_id                String?
+  about_section          String?
+  ratings                Decimal?       @db.Decimal(3, 2)
+  rate_chart             Decimal?       @db.Decimal(10, 2)
+  degree                 String?        @db.VarChar(255)
+  transcripts            String?
+  additional_expert_info String?
+  calls                  calls[]
+  chats                  chats[]
+  user_table             User?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  feedback               feedback[]
+  schedules              schedules[]
+  transactions           transactions[]
+}
+
+model feedback {
+  feedback_id  Int           @id @default(autoincrement())
+  user_id      String?
+  expert_id    Int?
+  rating       Decimal       @db.Decimal(3, 2)
+  comment      String?
+  timestamp    DateTime      @db.Timestamp(6)
+  expert_table expert_table? @relation(fields: [expert_id], references: [expert_id], onDelete: NoAction, onUpdate: NoAction)
+  user_table   User?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model schedules {
+  schedule_id         Int           @id @default(autoincrement())
+  user_id             String?
+  expert_id           Int?
+  scheduled_date_time DateTime      @db.Timestamp(6)
+  status              String        @db.VarChar(50)
+  expert_table        expert_table? @relation(fields: [expert_id], references: [expert_id], onDelete: NoAction, onUpdate: NoAction)
+  user_table          User?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model transactions {
+  transaction_id          Int           @id @default(autoincrement())
+  user_id                 String?
+  expert_id               Int?
+  amount                  Decimal       @db.Decimal(10, 2)
+  timestamp               DateTime      @db.Timestamp(6)
+  status                  String        @db.VarChar(50)
+  payment_method          String?       @db.VarChar(255)
+  transaction_id_provider String?       @db.VarChar(255)
+  expert_table            expert_table? @relation(fields: [expert_id], references: [expert_id], onDelete: NoAction, onUpdate: NoAction)
+  user_table              User?   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum UserRole {
+  USER
+  EXPERT
+  ADMIN
+}
+
+model User {
+
+  id         String    @id @default(cuid()) @map("user_id")
+  username        String?         @unique
+  email           String?         @unique
+  password        String?
+  role            UserRole @default(USER)
+  name            String?
+  profile_picture String?
+  address         String?
+  preferences     String?
+  calls           calls[]
+  chats           chats[]
+  expert_table    expert_table[]
+  feedback        feedback[]
+  schedules       schedules[]
+  transactions    transactions[]
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  @@map("user_table")
+}
+
+
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model VerificationToken {
+  id String @id @default(cuid())
+  email String
+  token String @unique
+  expires DateTime
+
+  @@unique([email, token])
+
+}
