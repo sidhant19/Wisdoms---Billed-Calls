@@ -1,3 +1,24 @@
+## Wisdoms
+
+![Screenshot from 2024-04-22 21-19-10](https://github.com/sidhant19/Wisdoms---Billed-Calls/assets/101086027/e1778b11-7497-4469-9153-d06fab467945)
+![image](https://github.com/sidhant19/Wisdoms---Billed-Calls/assets/101086027/6ceb3360-1553-4f6a-9bf2-b9551481d67b)
+
+
+This is an ongoing project. 
+
+22 April 2024 Auhentication Implemented.
+
+![Screenshot from 2024-04-22 21-19-37](https://github.com/sidhant19/Wisdoms---Billed-Calls/assets/101086027/4ed87673-9e10-4862-b392-11b256f69895)
+![Screenshot from 2024-04-22 21-19-30](https://github.com/sidhant19/Wisdoms---Billed-Calls/assets/101086027/34046614-479e-45f2-9def-b7549e5714db)
+
+
+Next - Dashboard
+
+
+
+
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
